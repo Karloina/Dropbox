@@ -11,7 +11,7 @@ namespace DropboxClient
 {
     class TransferManager
     {
-        public static ConcurrentDictionary<string, TransferThread> ProcessingFiles { get; private set; } = new ConcurrentDictionary<string, TransferThread>();
+        public static ConcurrentDictionary<string, TransferThread> ProcessingFiles { get; } = new ConcurrentDictionary<string, TransferThread>();
         private static readonly string ServerUrl = "https://localhost:44345";
         private static HttpClient _client = new HttpClient();
         private static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(2);
@@ -61,26 +61,23 @@ namespace DropboxClient
 
                 foreach (var filename in toBeDownloaded)
                 {
-                    var dt = new DownloadThread(_semaphoreSlim, _delayTimeForTransfer, filename, _login, RemoveFileTransfer,
-                        _workingDirectory);
+                    var dt = new DownloadThread(_semaphoreSlim, _delayTimeForTransfer, filename, _login, _workingDirectory);
                     dt.Start();
                     ProcessingFiles.TryAdd(filename, dt);
                 }
 
                 foreach (var filename in toBeUploaded)
                 {
-                    var ut = new UploadThread(_semaphoreSlim, _delayTimeForTransfer, filename, _login, RemoveFileTransfer,
-                        _workingDirectory);
+                    var ut = new UploadThread(_semaphoreSlim, _delayTimeForTransfer, filename, _login, _workingDirectory);
                     ut.Start();
                     ProcessingFiles.TryAdd(filename, ut);
                 }
-
 
                 Thread.Sleep(1000);     //1 s
             }
         }
 
-        private static void RemoveFileTransfer(string procFile)
+        public static void RemoveFileTransfer(string procFile)
         {
             ProcessingFiles.Remove(procFile, out var empty);
         }

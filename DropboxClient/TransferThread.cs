@@ -8,18 +8,16 @@ namespace DropboxClient
     {
         private SemaphoreSlim _s;
         private int _time;
-        private Action<string> _action;
-        public string Filename { get; private set; }
-        public string Login { get; private set; }
+        public string Filename { get; }
+        public string Login { get; }
         public FileStatus FileStatus { get; set; }
         private string _fileLocation;
 
         private Thread _t;
-        public TransferThread(SemaphoreSlim s, int time, string filename, string login, Action<string> finishedReceiver, string fileLocation)
+        public TransferThread(SemaphoreSlim s, int time, string filename, string login, string fileLocation)
         {
             _s = s;
             _time = time;
-            _action = finishedReceiver;
             Filename = filename;
             Login = login;
             _fileLocation = fileLocation;
@@ -39,7 +37,7 @@ namespace DropboxClient
             Thread.Sleep(_time);
             _s.Release();
             FileStatus = FileStatus.Finished;
-            _action(Filename);
+            TransferManager.RemoveFileTransfer(Filename);
         }
         public abstract void ExecuteJob();
 

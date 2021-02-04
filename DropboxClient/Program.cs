@@ -32,12 +32,12 @@ namespace DropboxClient
                 return;
             }
 
-            TransferManager.Start(_dir);
+            TransferManager.Start(_dir, _login);
 
             while (true)
             {
                 Console.Clear();
-                PrintLoginDirectoryInfo(_login, _dir);.
+                PrintLoginDirectoryInfo(_login, _dir);
                 Console.WriteLine("Files in progress:");
                 foreach (var fileTranfer in TransferManager.ProcessingFiles.Values)
                 {

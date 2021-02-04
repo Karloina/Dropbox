@@ -5,8 +5,7 @@ namespace DropboxClient
 {
     class UploadThread : TransferThread
     {
-
-        public UploadThread(SemaphoreSlim s, int time, string filename, string login, Action<string> finishedReceiver, string fileLocation) : base(s, time, filename, login, finishedReceiver, fileLocation)
+        public UploadThread(SemaphoreSlim s, int time, string filename, string login, string fileLocation) : base(s, time, filename, login, fileLocation)
         {
         }
 

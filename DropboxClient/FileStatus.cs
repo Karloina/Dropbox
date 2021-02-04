@@ -2,8 +2,10 @@
 {
     public enum FileStatus
     {
+        Preparing,
         Downloading, 
         Uploading,
-        Finished
+        Finished,
+        Interrupted
     }
 }
