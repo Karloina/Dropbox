@@ -1,0 +1,19 @@
+{
+  "profiles": {
+    "DropboxClient": {
+      "commandName": "Project"
+    },
+    "Kasia": {
+      "commandName": "Project",
+      "commandLineArgs": "kasia D:\\\\studia\\\\Masters\\\\SEM3\\\\Wsp\\\\ClientCatalog\\\\kasia"
+    },
+    "Andrzej": {
+      "commandName": "Project",
+      "commandLineArgs": "andrzej D:\\\\studia\\\\Masters\\\\SEM3\\\\Wsp\\\\ClientCatalog\\\\andrzej"
+    },
+    "Jarek": {
+      "commandName": "Project",
+      "commandLineArgs": "jarek D:\\\\studia\\\\Masters\\\\SEM3\\\\Wsp\\\\ClientCatalog\\\\jarek"
+    }
+  }
+}
