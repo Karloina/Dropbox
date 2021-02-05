@@ -15,7 +15,7 @@ namespace DropboxClient
         public static ConcurrentDictionary<string, TransferThread> ProcessingFiles { get; } = new ConcurrentDictionary<string, TransferThread>();
         private static readonly string ServerUrl = "https://localhost:44345";
         private static HttpClient _client = new HttpClient();
-        private static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(2); // ile wątków chcemy dopuścić do danej sekcji jednocześnie - max 2 wątki mają dostęp do 1 sekcji
+        private static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(5); // ile wątków chcemy dopuścić do danej sekcji jednocześnie - max 2 wątki mają dostęp do 1 sekcji
         private static int _delayTimeForTransfer = 5000;
         private static string _workingDirectory;
         private static string _login;

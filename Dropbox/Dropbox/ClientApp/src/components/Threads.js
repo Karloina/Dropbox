@@ -5,11 +5,12 @@ export class Threads extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { threads: [], loading: true };
+    this.state = { threads: [], loading: true};
   }
 
   componentDidMount() {
     this.populateThreadData();
+    setInterval(()=> this.populateThreadData(), 1000);
   }
 
   static renderThreadsTable(threads) {
@@ -23,8 +24,8 @@ export class Threads extends Component {
         </thead>
         <tbody>
           {threads.map(thread =>
-            <tr key={thread.number}>
-              <td>{thread.number}</td>
+            <tr key={thread.guid}>
+              <td>{thread.guid}</td>
               <td>{thread.status}</td>
             </tr>
           )}

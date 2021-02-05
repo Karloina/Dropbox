@@ -39,7 +39,7 @@ namespace DropboxClient
         {
             _s.Wait();
             ExecuteJob();
-            Thread.Sleep(_time);
+            //Thread.Sleep(_time);      Sleep only on server side
             _s.Release();
             FileStatus = FileStatus.Finished;
             TransferManager.RemoveFileTransfer(Filename);       //usuń z listy plików aktualnie pobieranych/wrzucanych, ponieważ proces się zakończył

@@ -1,34 +1,51 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.IO;
-using System.Threading;
+using Microsoft.AspNetCore.Http;
 
 namespace Dropbox
 {
     public static class FileManager
     {
-        private static ConcurrentQueue<TransferTask> waitingQueue = new ConcurrentQueue<TransferTask>();
-        private static SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(5);
+        public static ConcurrentDictionary<Guid, TransferTask> tasks = new ConcurrentDictionary<Guid, TransferTask>();
+        private static SemaphoreFifoQueue _semaphoreFifoQueue = new SemaphoreFifoQueue(1);
 
-        public static void TryExecute()
+        public static byte[] DownloadFile(string login, string fileName, string location)
         {
-            _semaphoreSlim.Wait();
-            waitingQueue.TryPeek(out var task);
+            var task = new DownloadTask()
+            {
+                Login = login,
+                FileLocation = location,
+                FileName = fileName
+            };
+            
+            tasks.TryAdd(task.Id, task);
+            _semaphoreFifoQueue.Wait();
+
             task.Execute();
-            _semaphoreSlim.Release();
+
+            _semaphoreFifoQueue.Release();
+            return task.Bytes;
         }
 
-        public static byte[] DownloadFile(string login, string fileName)
+        public static void UploadFile(string login, string fileName, IFormFile formFile, string location)
         {
-            throw new NotImplementedException();
+            var task = new UploadTask()
+            {
+                Login = login,
+                FileLocation = location,
+                FileName = fileName,
+                FormFile = formFile
+            };
+
+            tasks.TryAdd(task.Id, task);
+            _semaphoreFifoQueue.Wait();
+
+            task.Execute();
+
+            _semaphoreFifoQueue.Release();
+            //tasks.TryRemove(task.Id, out var empty);
         }
-
-        public static void UploadFile(string login, string fileName, Stream stream)
-        {
-            //kontrolowana przez semafor
-        }
-
-
 
     }
 }

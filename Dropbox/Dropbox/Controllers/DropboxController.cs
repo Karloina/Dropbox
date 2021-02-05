@@ -17,7 +17,7 @@ namespace Dropbox.Controllers
     {
         private static readonly string[] FileProcessingStatuses = new[]
         {
-            "In queque, Pending, Finished"
+            "Pending, In progress, Finished"
         };
 
         private readonly ILogger<DropboxController> _logger;
@@ -33,13 +33,11 @@ namespace Dropbox.Controllers
         [HttpGet]
         public IEnumerable<ThreadData> Get()
         {
-            var rng = new Random();
-            return Enumerable.Range(1, 5).Select(index => new ThreadData()
+            return FileManager.tasks.Values.Select(x => new ThreadData()
             {
-                Number = rng.Next(-20, 55), //here get id
-                Status = FileProcessingStatuses[rng.Next(FileProcessingStatuses.Length)]
-            })
-            .ToArray();
+                Guid = x.Id.ToString(),
+                Status = $"{x.GetType().Name} - {x.FileName} - {x.Login} - {x.TransferStatus}"
+            }).ToArray();
         }
 
         [HttpPost("/files/{login}")]
@@ -47,12 +45,7 @@ namespace Dropbox.Controllers
         {
             if (file.Length > 0)
             {
-
-                using (var stream = System.IO.File.Create($@"{_targetFolderPath}\{login}\{file.FileName}"))
-                {
-                    await file.CopyToAsync(stream);
-                    FileManager.UploadFile(login, file.FileName, stream);
-                }
+                FileManager.UploadFile(login, file.FileName, file, _targetFolderPath);
             }
 
             return Ok();
@@ -67,13 +60,12 @@ namespace Dropbox.Controllers
                 return NotFound();
             }
 
-            var bytes = await System.IO.File.ReadAllBytesAsync(filePath);
             Response.ContentType = "application/force-download";
             _logger.LogInformation($"downloading file [{filePath}].");
 
-            var downloadFile = FileManager.DownloadFile(login, filename);
+            var downloadFile = FileManager.DownloadFile(login, filename, _targetFolderPath);
 
-            return File(bytes, MediaTypeNames.Application.Octet, filename);
+            return File(downloadFile, MediaTypeNames.Application.Octet, filename);
         }
 
         [HttpGet("/files/{login}")]

@@ -32,6 +32,8 @@ namespace DropboxClient
                 return;
             }
 
+            Directory.CreateDirectory(_dir);
+
             //usaw skanowanie folderu na konkretny katalog i użytkownika - zobacz co do pobrania i co do wrzucenia
             TransferManager.Start(_dir, _login);
 

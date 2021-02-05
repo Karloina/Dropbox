@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace Dropbox
+﻿namespace Dropbox
 {
     public class DownloadTask : TransferTask
     {
-        public override void Execute()
+        public byte[] Bytes { get; set; }
+
+        public override void DelayedJob()
         {
-            throw new NotImplementedException();
+            Bytes = System.IO.File.ReadAllBytes($@"{FileLocation}\{Login}\{FileName}");
         }
     }
 }
