@@ -51,6 +51,7 @@ namespace Dropbox.Controllers
                 using (var stream = System.IO.File.Create($@"{_targetFolderPath}\{login}\{file.FileName}"))
                 {
                     await file.CopyToAsync(stream);
+                    FileManager.UploadFile(login, file.FileName, stream);
                 }
             }
 
@@ -69,6 +70,9 @@ namespace Dropbox.Controllers
             var bytes = await System.IO.File.ReadAllBytesAsync(filePath);
             Response.ContentType = "application/force-download";
             _logger.LogInformation($"downloading file [{filePath}].");
+
+            var downloadFile = FileManager.DownloadFile(login, filename);
+
             return File(bytes, MediaTypeNames.Application.Octet, filename);
         }
 
