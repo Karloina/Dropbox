@@ -75,12 +75,14 @@ namespace Dropbox.Controllers
         [HttpGet("/files/{login}")]
         public async Task<IActionResult> GetFilesForUser(string login)
         {
-           return Ok(Directory.GetFiles($@"{_targetFolderPath}\{login}"));
+           return Ok(Directory.GetFiles($@"{_targetFolderPath}\{login}").Select(Path.GetFileName).ToArray());
         }
 
         [HttpGet("/authenticate/{login}")]
         public async Task<IActionResult> LogIn(string login)
         {
+            Directory.CreateDirectory($@"{_targetFolderPath}\{login}");
+
             if (!_activeUsers.ContainsKey(login))
             {
                 _activeUsers.TryAdd(login, login);

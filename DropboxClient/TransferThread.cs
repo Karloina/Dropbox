@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net.Http;
 using System.Threading;
 
 namespace DropboxClient
@@ -11,10 +12,13 @@ namespace DropboxClient
         public string Filename { get; }
         public string Login { get; }
         public FileStatus FileStatus { get; set; }
-        private string _fileLocation;
-
+        protected string _fileLocation;
         private Thread _t;
-        public TransferThread(SemaphoreSlim s, int time, string filename, string login, string fileLocation)
+        protected HttpClient _httpClient;
+        protected static readonly string _serverUrl = "https://localhost:44345";
+
+
+        protected TransferThread(SemaphoreSlim s, int time, string filename, string login, string fileLocation, HttpClient httpClient)
         {
             _s = s;
             _time = time;
@@ -23,6 +27,7 @@ namespace DropboxClient
             _fileLocation = fileLocation;
             _t = new Thread(DelayedJob);
             FileStatus = FileStatus.Preparing;
+            _httpClient = httpClient;
         }
 
         public void Start()
@@ -37,7 +42,7 @@ namespace DropboxClient
             Thread.Sleep(_time);
             _s.Release();
             FileStatus = FileStatus.Finished;
-            TransferManager.RemoveFileTransfer(Filename);
+            TransferManager.RemoveFileTransfer(Filename);       //usuń z listy plików aktualnie pobieranych/wrzucanych, ponieważ proces się zakończył
         }
         public abstract void ExecuteJob();
 
