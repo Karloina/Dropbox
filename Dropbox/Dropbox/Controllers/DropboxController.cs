@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -15,11 +14,6 @@ namespace Dropbox.Controllers
     [Route("[controller]")]
     public class DropboxController : ControllerBase
     {
-        private static readonly string[] FileProcessingStatuses = new[]
-        {
-            "Pending, In progress, Finished"
-        };
-
         private readonly ILogger<DropboxController> _logger;
         private readonly string _targetFolderPath;
         private static ConcurrentDictionary<string, string> _activeUsers = new ConcurrentDictionary<string, string>();
@@ -60,9 +54,7 @@ namespace Dropbox.Controllers
                 return NotFound();
             }
 
-            Response.ContentType = "application/force-download";
             _logger.LogInformation($"downloading file [{filePath}].");
-
             var downloadFile = FileManager.DownloadFile(login, filename, _targetFolderPath);
 
             return File(downloadFile, MediaTypeNames.Application.Octet, filename);

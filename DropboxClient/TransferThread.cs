@@ -1,10 +1,8 @@
-﻿using System;
-using System.Net.Http;
+﻿using System.Net.Http;
 using System.Threading;
 
 namespace DropboxClient
 {
-    //1 watek
     abstract class TransferThread
     {
         private SemaphoreSlim _s;
@@ -25,7 +23,7 @@ namespace DropboxClient
             Filename = filename;
             Login = login;
             _fileLocation = fileLocation;
-            _t = new Thread(DelayedJob);
+            _t = new Thread(Job);
             FileStatus = FileStatus.Preparing;
             _httpClient = httpClient;
         }
@@ -35,15 +33,15 @@ namespace DropboxClient
             _t.Start();
         }
 
-        public void DelayedJob()
+        public void Job()
         {
             _s.Wait();
             ExecuteJob();
-            //Thread.Sleep(_time);      Sleep only on server side
             _s.Release();
             FileStatus = FileStatus.Finished;
-            TransferManager.RemoveFileTransfer(Filename);       //usuń z listy plików aktualnie pobieranych/wrzucanych, ponieważ proces się zakończył
+            TransferManager.RemoveFileTransfer(Filename);
         }
+
         public abstract void ExecuteJob();
 
         public void Cancel()

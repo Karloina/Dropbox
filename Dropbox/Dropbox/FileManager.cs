@@ -8,7 +8,7 @@ namespace Dropbox
     public static class FileManager
     {
         public static ConcurrentDictionary<Guid, TransferTask> tasks = new ConcurrentDictionary<Guid, TransferTask>();
-        private static SemaphoreFifoQueue _semaphoreFifoQueue = new SemaphoreFifoQueue(1);
+        private static SemaphoreFifoQueue _semaphoreFifoQueue = new SemaphoreFifoQueue(2);
 
         public static byte[] DownloadFile(string login, string fileName, string location)
         {
@@ -44,7 +44,6 @@ namespace Dropbox
             task.Execute();
 
             _semaphoreFifoQueue.Release();
-            //tasks.TryRemove(task.Id, out var empty);
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Net.Http;
-using System.Runtime.InteropServices.ComTypes;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -33,9 +32,7 @@ namespace DropboxClient
             }
 
             Directory.CreateDirectory(_dir);
-
-            //usaw skanowanie folderu na konkretny katalog i użytkownika - zobacz co do pobrania i co do wrzucenia
-            TransferManager.Start(_dir, _login);
+            TransferManager.Start(_dir, _login);    //na innym wątku
 
             while (true)
             {

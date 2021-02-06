@@ -20,13 +20,6 @@ namespace DropboxClient
             var multipartContent = new MultipartFormDataContent();
             multipartContent.Add(byteArrayContent, "file", Filename);
             var postResponse = Task.Run(async () => await _httpClient.PostAsync(@$"{_serverUrl}/files/{Login}", multipartContent)).Result;
-
-
-
-            //albo to 
-            // var postResponse = Task.Run(async () => await _httpClient.PostAsync("offers", new MultipartFormDataContent {
-            //     { byteArrayContent, "csvFile", "filename" }
-            // }));
          }
     }
 }

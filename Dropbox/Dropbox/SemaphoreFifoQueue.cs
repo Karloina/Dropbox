@@ -23,7 +23,7 @@ namespace Dropbox
         {
             var tcs = new TaskCompletionSource<bool>();
             queue.Enqueue(tcs);
-            //za każdym razem jak dodajemy do kolejki task to też rejestrujemy do metody wait async zdjęcie jednego elementu z kolejki
+            //za każdym razem jak dodajemy do kolejki task to też rejestrujemy do metody WaitAsync zdjęcie jednego elementu z kolejki
             semaphore.WaitAsync().ContinueWith(t =>
             {
                 TaskCompletionSource<bool> popped;
